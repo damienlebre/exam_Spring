@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <title>Admin Home</title>
+      <div th:insert="~{fragments/script-styleFragment.html}"></div>
+  </head>
+  <body>
+
+  <div th:replace="~{fragments/headerFragment :: header}"></div>
+
+    <section class="min-vh-100">
+        <h1 class="my-5 ms-3">Bonjour Administrateur!</h1>
+        <h2 class="ms-5">Bienvenue dans votre espace d'administration sécurisé</h2>
+
+
+    </section>
+  <div th:insert="~{fragments/footerFragment.html}"></div>
+  </body>
+</html>

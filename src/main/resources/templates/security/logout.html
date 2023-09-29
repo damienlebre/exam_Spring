@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Déconnexion custom</title>
+        <div th:insert="~{fragments/script-styleFragment.html}"></div>
+    </head>
+    <body>
+    <div th:replace="~{fragments/headerFragment :: header}"></div>
+        <section class="min-vh-100">
+
+            <div>
+                <h1 class="text-light my-5 ms-3">Vous êtes sur le point de vous déconnecter.</h1>
+                <h2 class="text-light my-5 ms-3">Vous êtes certains ?</h2>
+            </div>
+
+            <form th:action="@{logout-processing}" method="post">
+                <!--mise en place du token de sécurité  (permet de vérifié que la perosnne qui soumet le formulaire (POST) et bien celle qui en a fait la demande (GET))     -->
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+                <!--  Les champs du formulaire      -->
+                <button type="submit" class="btn btn-outline-success ms-5">Confirmer</button>
+
+            </form>
+            <a th:href="@{/}"><button class="btn btn-outline-warning mt-5 ms-5"> annuler et revenir à l'acceuil</button></a>
+        </section>
+    <div th:insert="~{fragments/footerFragment.html}"></div>
+    </body>
+</html>
