@@ -14,7 +14,7 @@
             <h1 class=" my-5 ms-3">Bienvenue sur votre application d'annonces local </h1>
             <div th:if="${#authorization.expression('isAuthenticated()')}">
                 <div class="mx-5" th:text="${#authentication.getPrincipal()}"></div>
-                <a   th:href="@{/annonces/list}"><button  class="px-2 ms-5">Liste des annonces</button></a>
+                <a   th:href="@{/annonces/list}"><button  class="px-2 ms-5 btn btn-outline-success">Liste des annonces</button></a>
             </div>
         </div>
 

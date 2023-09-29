@@ -22,7 +22,7 @@ public class SecurityConfig {
 //                .csrf().disable()   ->mis en place pour le dev pour cutoff temporairement la sécu csrf (token authenf sur les formulaire, nécessite la mise en place de token sur les form)
 
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/login", "/register", "error/**","annonces/list", "/annonces/{id}", "/").permitAll()
+                        .requestMatchers("/login", "/register", "error/**","annonces/list", "/annonces/{id}","/js/**", "css/**","upload/**", "/").permitAll()
                         .requestMatchers("/js/**", "css/**").permitAll()
                         .requestMatchers("/admin").hasAuthority("admin")
                         .requestMatchers("/annonces/ajouter", "/annonces/modifier/**", "/annonces/supprimer/**").hasAnyAuthority("journaliste", "admin")

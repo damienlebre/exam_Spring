@@ -1,77 +1,83 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-  <head>
+<head>
     <title>Liste des Annonces</title>
     <div th:insert="~{fragments/script-styleFragment.html}"></div>
-  </head>
+</head>
 
-  <body>
+<body>
 
-    <div th:replace="~{fragments/headerFragment :: header}"></div>
+<div th:replace="~{fragments/headerFragment :: header}"></div>
 
-    <section class="min-vh-100">
+<section class="min-vh-100">
 
-      <div class="text-center mb-5 text-light">
+    <div class="text-center mb-5 text-light">
         <h1>Liste des Annonces</h1>
-        <p>Rôles de l'utilisateur :
-<!--          <span th:text="${#authentication.principal.authorities}"></span>-->
-        </p>
-      </div>
+        <!--        pour verifier le role user en mode debug-->
+        <!--        <p>Rôles de l'utilisateur :-->
+        <!--          <span th:text="${#authentication.principal.authorities}"></span>-->
+        <!--        </p>-->
+    </div>
 
-      <div class="d-flex justify-content-center mb-5">
+    <div class="d-flex flex-column align-items-center my-3">
+        <form action="#" method="get" class="d-flex">
+            <div class="form-group col-8">
+                <label for="categoryFilter">Filtrer les annonces par catégorie :</label>
+                <select id="categoryFilter" name="categoryFilter" class="form-control">
+                    <option value="">Toutes les catégories</option>
+                    <option th:each="category : ${categories}" th:value="${category.id}"
+                            th:text="${category.name}"></option>
+                </select>
+            </div>
+            <div class="col-3 mx-5">
+                <button type="submit" class="btn btn-primary mt-3">Filtrer</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="d-flex justify-content-center mb-5">
 
         <table class="col-10">
 
-          <thead>
-          <tr class="bg-dark">
-            <th class="col-2">Titre</th>
-            <th class="col-2">Catégorie</th>
-            <th class="col-3">Date de Publication</th>
-            <th class="col-3">Image</th>
-<!--            <th class="col-3">Auteur</th>-->
-            <th class="col-2">Actions</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr th:each="annonce : ${annonces}">
-            <td  class="col-2" th:text="${annonce.title}"></td>
-            <td  class="col-2" th:text="${annonce.category.name}"></td>
-            <td  class="col-3" th:text="${#dates.format(annonce.publicationDate, 'dd/MM/yyyy HH:mm')}"></td>
-            <td><img th:src="${annonce.image}" width="200px" alt="Image de l'annonce"></td>
+            <thead>
+            <tr class="bg-dark">
+                <th class="col-2">Titre</th>
+                <th class="col-2">Catégorie</th>
+                <th class="col-3">Date de Publication</th>
+                <th class="col-3">Image</th>
+                <!--            Sequel d'une tentative raté d'essayé d'attribué un auteur a une annonce, je le laisse pour retenter plus tard-->
+                <!--            <th class="col-3">Auteur</th>-->
+                <th class="col-2">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="annonce : ${annonces}">
+                <td class="col-2" th:text="${annonce.title}"></td>
+                <td class="col-2" th:text="${annonce.category.name}"></td>
+                <td class="col-3" th:text="${#dates.format(annonce.publicationDate, 'dd/MM/yyyy HH:mm')}"></td>
+                <td><img th:src="${annonce.image}" width="200px" alt="Image de l'annonce"></td>
 
-
-            <!--            <td  class="col-3" th:text="${annonce.journaliste.username}"></td>-->
-            <td  class="col-2">
-              <a th:href="@{/annonces/{id}(id=${annonce.id})}" class="btn btn-primary" >Détails</a>
-            </td>
-          </tr>
-          </tbody>
+                <!--            Sequel d'une tentative raté d'essayé d'attribué un auteur a une annonce, je le laisse pour retenter plus tard-->
+                <!--            <td  class="col-3" th:text="${annonce.journaliste.username}"></td>-->
+                <td class="col-2">
+                    <a th:href="@{/annonces/{id}(id=${annonce.id})}" class="btn btn-primary">Détails</a>
+                </td>
+            </tr>
+            </tbody>
 
         </table>
 
-      </div>
+    </div>
 
-      <div class="d-flex justify-content-center" sec:authorize="hasAnyAuthority('admin', 'journaliste')">
-        <a th:href="@{/annonces/ajouter}" class="btn btn-primary mt-5">Ajouter une annonce</a>
-      </div>
-
-
-      <form action="#" method="get">
-        <div class="form-group col-sm-5">
-          <label for="categoryFilter">Filtrer les annonces par catégorie :</label>
-          <select id="categoryFilter" name="categoryFilter" class="form-control">
-            <option value="">Toutes les catégories</option>
-            <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
-          </select>
+    <div class="d-flex justify-content-center">
+        <div sec:authorize="hasAnyAuthority('admin', 'journaliste')">
+            <a th:href="@{/annonces/ajouter}" class="btn btn-primary mt-5">Ajouter une annonce</a>
         </div>
-        <button type="submit" class="btn btn-primary">Filtrer</button>
-      </form>
+    </div>
 
 
-
-
-
-    </section>
-  </body>
+</section>
+<div th:insert="~{fragments/footerFragment.html}"></div>
+</body>
 </html>
