@@ -11,6 +11,9 @@
                         <li class="nav-item">
                             <a class="nav-link" th:href="@{/annonces/list}">Liste des annonces</a>
                         </li>
+                        <li class="nav-item" sec:authorize="hasAnyAuthority('admin', 'journaliste')">
+                            <a class="nav-link" th:href="@{/annonces/ajouter}">Créer une annonce</a>
+                        </li>
                         <li class="nav-item"  th:if="${not #authorization.expression('isAuthenticated()')}">
                             <a class="nav-link" th:href="@{/login}">Connexion</a>
                         </li>

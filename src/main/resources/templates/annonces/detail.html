@@ -10,7 +10,7 @@
 <section class="min-vh-100">
 
     <div class="text-center mb-5 text-light">
-        <h1>Détail de l'annonce</h1>
+        <h1 th:text="'Détail de l\'annonce : '+${annonce.title}"></h1>
     </div>
 
     <div th:if="${annonce}">
