@@ -43,20 +43,20 @@ public class AnnonceController {
         List<Annonce> annonces;
 
         if (categoryFilter != null) {
-            // Filtrer les annonces par catégorie si categoryFilter n'est pas null
+            // Filtrer annonces par catégorie
             annonces = annonceService.getAnnoncesByCategoryId(categoryFilter);
         } else {
-            // Sinon, récupérer la liste de toutes les annonces
+            // Sinon-> récupérer liste toutes les annonces
             annonces = annonceService.getAllAnnonces();
         }
 
-        // Récupérer la liste de toutes les catégories
+        // Récupérer liste catégories
         List<Category> categories = categoryService.getAllCategories();
 
         mv.addObject("annonces", annonces);
         mv.addObject("categories", categories);
 
-        // Ajoutez également la valeur du paramètre categoryFilter à la vue
+        // Ajouter  valeur categoryFilter au model
         mv.addObject("categoryId", categoryFilter);
 
         return mv;
@@ -82,7 +82,7 @@ public class AnnonceController {
                                         grantedAuthority.getAuthority().equals("journaliste") ||
                                                 grantedAuthority.getAuthority().equals("admin"))));
 
-        // Si journaliste ou admin -> autorise l'accès à la page d'ajout d'annonce
+        // Si journaliste ou admin -> autorise accès page d'ajout
         if (isJournalisteOrAdmin) {
             ModelAndView mv = new ModelAndView("annonces/ajouter");
             mv.addObject("annonce", new Annonce());
@@ -93,7 +93,7 @@ public class AnnonceController {
 
             return mv;
         } else {
-            // Sinon, redirection vers la liste
+            // Sinon-> redirection vers liste
             return new ModelAndView("redirect:/annonces/list");
         }
     }
@@ -124,7 +124,7 @@ public class AnnonceController {
 
     @RequestMapping(value = "/modifier/{id}", method = RequestMethod.GET)
     public ModelAndView showEditForm(@PathVariable Long id, Principal principal) {
-        // Vérifie le rôle de l'utilisateur
+        // Vérifier rôle utilisateur
         boolean isJournalisteOrAdmin = principal != null &&
                 (principal instanceof Authentication &&
                         (((Authentication) principal).getAuthorities().stream()
@@ -132,43 +132,42 @@ public class AnnonceController {
                                         grantedAuthority.getAuthority().equals("journaliste") ||
                                                 grantedAuthority.getAuthority().equals("admin"))));
 
-        // Si journaliste ou admin -> autorise l'accès à la page de modification
+        // Si journaliste ou admin -> autorise accès  page  modification
         if (isJournalisteOrAdmin) {
             ModelAndView mv = new ModelAndView("annonces/modifier");
             Optional<Annonce> annonceOptional = annonceService.getAnnonceById(id);
             Annonce annonce = annonceOptional.orElse(null);
             mv.addObject("annonce", annonce);
 
-            // Ajoutez la liste des catégories au modèle ici, de la même manière que pour l'ajout
+            // Ajouter  liste catégories au modèle
             List<Category> categories = categoryService.getAllCategories();
             mv.addObject("categories", categories);
 
             return mv;
         } else {
-            // Sinon, redirection vers la liste ou une page d'erreur d'accès refusé
+            // Sinon-> redirection vers la liste ou une page d'erreur d'accès refusé
             return new ModelAndView("redirect:/annonces/list");
         }
     }
 
     @RequestMapping(value = "/modifier/{id}", method = RequestMethod.POST)
     public ModelAndView editAnnonce(@PathVariable Long id, @ModelAttribute("annonce") Annonce annonce, @RequestParam("imageAnnonce") MultipartFile imageAnnonce, Principal principal) {
-        // Récupérez l'annonce existante de la base de données
+        // Récupérer l'annonce existante de la base de données
         Optional<Annonce> existingAnnonceOptional = annonceService.getAnnonceById(id);
         if (existingAnnonceOptional.isPresent()) {
             Annonce existingAnnonce = existingAnnonceOptional.get();
 
-            // Vérifiez si une nouvelle image a été téléchargée
+            // Vérifier si une nouvelle image a été téléchargée
             if (!imageAnnonce.isEmpty()) {
                 // Si une nouvelle image a été téléchargée, mettez à jour l'image de l'annonce
                 try {
                     existingAnnonce.setImage(storageService.store(imageAnnonce));
                 } catch (WrongFileTypeException | IOException e) {
                     // Gérez l'exception si le type de fichier est incorrect
-                    // Vous pouvez ajouter un message d'erreur ici si nécessaire
+
                 }
             }
 
-            // Mettez à jour les autres champs de l'annonce (titre, contenu, etc.)
             existingAnnonce.setTitle(annonce.getTitle());
             existingAnnonce.setContent(annonce.getContent());
             existingAnnonce.setPublicationDate(new Date());
@@ -180,14 +179,14 @@ public class AnnonceController {
             return mv;
         }
 
-        // Si l'annonce n'existe pas, redirection vers la liste
+        // Si l'annonce n'existe pas -> redirection vers  liste
         return new ModelAndView("redirect:/annonces/list");
     }
 
 
     @RequestMapping(value = "/supprimer/{id}", method = RequestMethod.GET)
     public ModelAndView deleteAnnonce(@PathVariable Long id, Principal principal) {
-        // Vérifiez le rôle de l'utilisateur pour la sécurité
+        // Vérifier rôle utilisateur pour sécurité
         boolean isJournalisteOrAdmin = principal != null &&
                 (principal instanceof Authentication &&
                         (((Authentication) principal).getAuthorities().stream()
